@@ -1,0 +1,97 @@
+.navbar{
+    height: 37px;
+    width: 98%;
+    padding: 1%;
+    justify-content: space-between;
+    background-color: rgba(0,0,0,.85);
+    position: fixed;
+    z-index: 1;
+}
+
+.contest{
+    padding-top: 5rem;
+    width: 50%;
+    margin: 0% 25%;
+    text-align: center;
+}
+.albumE{
+    display:flex;
+    flex-direction: row;
+    margin: 1%;
+}
+.img{
+    width: 30%;
+}
+.img2{
+    width: 40%;
+}
+.cont_pr{
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+}
+.img_G{
+    height: 100%;
+    width: 100%;
+    border-radius:5%;
+}
+.img_{
+    height: 100px;
+    width: 100px;
+    border-radius:50%;
+    margin:2px;
+}
+.cont{
+    width: 58%;
+    margin-left: 2%;
+}
+.addst {
+    width: 30%;
+    opacity: 1 !important;
+    margin: 10% 35%;
+    border: 1px solid #995d9b;
+    padding: 0% 0% 2%;
+    z-index: 1;
+    position: absolute;
+    background: #fff;
+    border-radius: 5px;
+}
+.addst-dv {
+    justify-content: space-between;
+    display: grid;
+    /* grid-template-rows: 50% 50%; */
+    padding: 1% 5%;
+    grid-gap: 2%;
+    grid-gap: 0%;
+    gap: 1%;
+    grid-template-columns: 49% 49%;
+}
+.add-btn{
+ text-align: center ;
+}
+.alpar{
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+.alpar2{
+    width: 80%;
+    padding-top: 5rem;
+    margin: 0% 10%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+.songss{
+    margin: 2%;
+    justify-content: space-between;
+    display: flex;
+}
+.songss>p{
+    padding:0%;
+    margin:0%;
+}
+.css-ws0ohx-MuiAutocomplete-root 
+.MuiOutlinedInput-root {
+    padding: 0px !important;
+}
