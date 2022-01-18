@@ -10,7 +10,7 @@ function App() {
   return (
     <>
     <Switch>
-      <Route path="/page/:page" exact > 
+      <Route path="/home" exact > 
     <Home />
         <Album />
       </Route>

@@ -10,16 +10,28 @@ export default function ShowAlbum() {
   const [id, setid] = useState("");
   const [error, seterror] = useState(false);
   const [load, setLoad] = useState(false);
-  const [name, setname] = useState("");
   const [editflag, seteditflag] = useState(false);
   const [e, sete] = useState([]);
   const idA = useParams();
   const { isLogin } = useSelector((state) => state.Auth);
   let history = useHistory();
+  const [name, setname] = useState("");
+  const [genre, setgenre] = useState("");
+  const [alimg, setalimg] = useState("");
+  const [arimg, setarimg] = useState("");
+  const [year, setyear] = useState("");
+  const [arname, setarname] = useState("");
+  const [forceUpadte,setForceUpadte] = useState(0)
+  const [sedit,setsedit]= useState(false)
+  const [sname,setsname]= useState("")
+  const [du,setdur]= useState("")
+
+  const [addname,setaddname]= useState("")
+  const [adddur,setadddur]= useState("")
+
   async function deleteA(idd) {
     setLoad(true);
     try {
-      console.log(e._id);
       let album = await axios.delete(
         `http://localhost:2345/music/delete/${e._id}`,
         // `https://shielded-sands-21994.herokuapp.com/music/delete/${e._id}`,
@@ -30,7 +42,7 @@ export default function ShowAlbum() {
         }
       );
       setLoad(false);
-
+      history.goBack();
       seterror(false);
     } catch (error) {
       console.log("error:", error);
@@ -46,7 +58,12 @@ export default function ShowAlbum() {
         // `https://shielded-sands-21994.herokuapp.com/music/editAlbum/${idd}`,
 
         {
-          name: `${name}`,
+          name: `${name != "" ? name : e.name}`,
+          artistname: `${arname != "" ? arname : e.artistname}`,
+          genre: `${genre != "" ? genre : e.genre}`,
+          year: `${year != "" ? year : e.year}`,
+          artistimg: `${arimg != "" ? arimg : e.artistimg}`,
+          albumimg: `${alimg != "" ? alimg : e.albumimg}`,
         },
         {
           headers: {
@@ -62,6 +79,61 @@ export default function ShowAlbum() {
       console.log("error:", error);
       setLoad(false);
       seterror(true);
+    }
+  }
+
+  async function sondelete(ii) {
+    setLoad(true);
+    try {
+      let album = await axios.patch(
+        `http://localhost:2345/music/songedit/${idA.idA}/ii/${ii}`
+      );
+      seterror(false);
+      setLoad(false);
+      // console.log("sond delete", album);
+      setForceUpadte(forceUpadte+1)
+    } catch (error) {
+      setLoad(false);
+      seterror(true);
+      console.log("error:", error);
+    }
+  }
+  
+  async function songAdd(ii) {
+    setLoad(true);
+    try {
+      let album = await axios.patch(
+        `http://localhost:2345/music/songadd/${idA.idA}/ii/${ii}/d/${adddur}/s/${addname}`
+      );
+      seterror(false);
+      setLoad(false);
+      setaddname("")
+      setadddur("")
+      // console.log("sond delete", album);
+      setForceUpadte(forceUpadte+1)
+    } catch (error) {
+      setLoad(false);
+      seterror(true);
+      console.log("error:", error);
+    }
+  }
+  async function editsong(ii) {
+    setLoad(true);
+    try {
+      let album = await axios.patch(
+        `http://localhost:2345/music/songedit/${idA.idA}/ii/${ii}/d/${du}/s/${sname}`
+      );
+      seterror(false);
+      setLoad(false);
+      setsname("")
+      setdur("")
+      setsedit(!sedit)
+      // console.log("sond delete", album);
+      setForceUpadte(forceUpadte+1)
+    } catch (error) {
+      setLoad(false);
+      seterror(true);
+      console.log("error:", error);
     }
   }
   useEffect(() => {
@@ -92,7 +164,7 @@ export default function ShowAlbum() {
     }
     async function getdata() {
       setLoad(true);
-      console.log("idA:", idA);
+
       try {
         let album = await axios.get(
           `http://localhost:2345/music/getalbum/${idA.idA}`,
@@ -104,7 +176,7 @@ export default function ShowAlbum() {
           }
         );
         seterror(false);
-        console.log("album:", album);
+
         sete(album.data.album);
         setLoad(false);
       } catch (error) {
@@ -113,8 +185,9 @@ export default function ShowAlbum() {
         console.log("error:", error);
       }
     }
+
     getdata();
-  }, [show, editflag]);
+  }, [show, editflag,forceUpadte]);
   return load ? (
     <>
       <p>Loading...</p>
@@ -140,6 +213,24 @@ export default function ShowAlbum() {
               src={e.albumimg}
               alt=""
             />
+            {editflag ? (
+              <>
+                <TextField
+                  style={{ margin: "2% 0%" }}
+                  label={"AlbumImg"}
+                  value={alimg}
+                  onChange={(e) => {
+                    setalimg(e.target.value);
+                  }}
+                  id="outlined-basic"
+                  variant="outlined"
+                  className="name_inpt"
+                  size="small"
+                />
+              </>
+            ) : (
+              ""
+            )}
           </div>
           <div className="cont_pr">
             <div className="cont">
@@ -148,6 +239,7 @@ export default function ShowAlbum() {
               ) : (
                 <>
                   <TextField
+                    style={{ margin: "2% 0%" }}
                     label={e.name}
                     value={name}
                     onChange={(e) => {
@@ -158,34 +250,105 @@ export default function ShowAlbum() {
                     className="name_inpt"
                     size="small"
                   />
-                  <Button
-                    disabled={!name}
-                    onClick={() => {
-                      editA(e._id);
-                    }}
-                  >
-                    Edit
-                  </Button>
                 </>
               )}
-              <p>{e.genre}</p>
-              <p>{e.year}</p>
+              {!editflag ? (
+                <p>{e.genre}</p>
+              ) : (
+                <>
+                  <TextField
+                    style={{ margin: "2% 0%" }}
+                    label={e.genre}
+                    value={genre}
+                    onChange={(e) => {
+                      setgenre(e.target.value);
+                    }}
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />
+                </>
+              )}
+              {!editflag ? (
+                <p>{e.year}</p>
+              ) : (
+                <>
+                  <TextField
+                    style={{ margin: "2% 0%" }}
+                    // label={e.year}
+                    value={year}
+                    onChange={(e) => {
+                      setyear(e.target.value);
+                    }}
+                    type="date"
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />
+                </>
+              )}
               <div className="img2">
                 <img className="img_" src={e.artistimg} alt="" />
+                {editflag ? (
+                  <TextField
+                    style={{ margin: "2% 0%" }}
+                    label={"ArtistImg"}
+                    value={arimg}
+                    onChange={(e) => {
+                      setarimg(e.target.value);
+                    }}
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className="cont">
-              <p>{e.artistname}</p>
+              {!editflag ? (
+                <p>{e.artistname}</p>
+              ) : (
+                <>
+                  <TextField
+                    label={e.artistname}
+                    value={arname}
+                    onChange={(e) => {
+                      setarname(e.target.value);
+                    }}
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />
+                </>
+              )}
               <p>songs {e.songs?.length}</p>
               {id == e.artist ? (
                 <>
+                  {editflag ? (
+                    <Button
+                      onClick={() => {
+                        editA(e._id);
+                      }}
+                    >
+                      yes
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                   <Button
                     onClick={() => {
                       seteditflag(!editflag);
                     }}
                   >
-                    Edit
+                    {!editflag ? "Edit" : "No"}
                   </Button>
+
                   <Button onClick={() => deleteA(e._id)}>Delete</Button>
                 </>
               ) : (
@@ -194,23 +357,86 @@ export default function ShowAlbum() {
             </div>
           </div>
         </div>
-        <div>
+        <div style={{ marginTop: "2rem" }}>
           {
             <>
               <div className="songss">
-                <p>Song Name</p>
-                <p>Duration</p>
+                {/* <p>Song Name</p>
+                <p>Duration</p> */}
               </div>
-              {e.songs?.map((e, i) => (
-                <div key={i} className="songss">
-                  <p>
-                    {i + 1} {e[0]}
-                  </p>
-                  <p>{e[1]}</p>
-                </div>
+              {e.songs?.map((e?, i) => (
+                <>
+                  <div key={i} className="songss">
+                   {sedit? <TextField
+                    label={e[0]}
+                    value={sname}
+                    onChange={(e) => {
+                      setsname(e.target.value);
+                    }}
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />: <p>
+                      {i + 1} {e[0]}
+                    </p>}
+                    {sedit? <TextField
+                    label={e[1]}
+                    value={du}
+                    onChange={(e) => {
+                      setdur(e.target.value);
+                    }}
+                    type="number"
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />:  <p style={{ float: "right" }}>
+                      {e[1]}
+                    </p>
+                    }
+                   {sedit?    <Button disabled={du=="" || sname==""} onClick={() =>
+                    {
+                      
+                      editsong(i)
+                    }
+                       }>Yes</Button>:""}
+                    <Button 
+                      onClick={() =>setsedit(!sedit)} >Edit</Button>
+                      <Button onClick={() => sondelete(i)}>Delete</Button>
+                  </div>
+                </>
               ))}
             </>
           }
+             <div className="songss">
+          <TextField
+                    label={"Song Name"}
+                    value={addname}
+                    onChange={(e) => {
+                      setaddname(e.target.value);
+                    }}
+                   
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />
+                  <TextField
+                    label={"song Duration"}
+                    value={adddur}
+                    onChange={(e) => {
+                      setadddur(e.target.value);
+                    }}
+                    type="number"
+                    id="outlined-basic"
+                    variant="outlined"
+                    className="name_inpt"
+                    size="small"
+                  />
+                   <Button  disabled={adddur=="" || addname==""}
+                      onClick={() =>songAdd()} >Add</Button>
+                  </div>
         </div>
       </div>
     </>

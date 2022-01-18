@@ -16,13 +16,14 @@ export default function Redirectt() {
 
 
   useEffect(() => {
-        dispatch(AddToken({token,name}))
+      if(isLogin==false){
+        dispatch(AddToken({token,name}))}
     },[])  
 
     if(isLogin==false){
-        return <Redirect to="/"/>
+        return <Redirect to="/home"/>
     }else{  
         console.log("ss2");
-        return <Redirect to="/"/>
+        return <Redirect to="/home"/>
     }
 }

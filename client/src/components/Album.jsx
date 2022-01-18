@@ -6,7 +6,7 @@ import "./hoe.css";
 import { useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 const dataa = [
   "Jazz",
   "Modal",
@@ -17,45 +17,83 @@ const dataa = [
   "Reggae",
   "Funk",
 ];
-
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
 export default function Album() {
+  const setCurrentPage = (event, value) => {
+    setPage(value);
+    history.push(`/home?page=${value}&size=${limit}`);
+  };
+  const query = useQuery();
+  const [page, setPage] = useState(+query.get("page") || 1);
+  query.set("page", page.toString());
   const [albumdata, setalbumdata] = useState([]);
   const [load1, setload1] = useState(false);
   const [error1, seterror1] = useState(false);
   const [totalPage, setTotalpage] = useState(0);
   const [forceUpade2, setforceUpade2] = useState(0);
   // const [page, serPage] = useState(1);
-  const [limit, serLimit] = useState(5);
-  const [year, setyear] = useState(false);
+  const [limit, serLimit] = useState(+query.get("size") || 5);
+  const [year, setyear] = useState(query.get("year") || "1");
   const [genre, setgenre] = useState(false);
   const [string, setstring] = useState("");
-  const [genres, setgenres] = useState("");
-  const [personal, setpersonal] = useState(false);
+  const [genres, setgenres] = useState(query.get("genre") || "");
+  // query.set("genre", genres.toString());
+  const [personal, setpersonal] = useState(query.get("self") || 1);
   const { isLogin, token } = useSelector((state) => state.Auth);
   let history = useHistory();
-  let page;
-  page = useParams() || 1;
-  const setCurrentPage = (event, value) => {
-    history.push(`/page/${value}`);
-  };
+  // let page;
+  // page = useParams() || 1;
+
+  // sort=author:asc
   useEffect(() => {
     async function getalbum() {
       setload1(true);
       try {
         let album = await axios.get(
           // `https://shielded-sands-21994.herokuapp.com/music/allAllbum?page=${page}&limit=${limit}&year=${
-          `http://localhost:2345/music/allAllbum?page=${
-            page.page
-          }&limit=${limit}&year=${
-            year ? "-1" : "1"
-          }&name=${string}&genre=${genres}`
+          `http://localhost:2345/music/allAllbum?page=${+query.get(
+            "page"
+          )}&limit=${+query.get("size")}&year=${
+            year 
+          }&name=${string}&genre=${
+            genres
+          }`
         );
+
         if (album !== undefined) {
-          console.log('album.data.totalPages', album.data.totalPages)
+          // if (album.data.Albums.length==5) {
+          //   setPage(album.data.totalPage-1);
+          //   query.set("page", album.data.totalPage.toString());
+          //   history.push(`/home?page=${page-1}&size=5`);
+          // }
+
           setTotalpage(album.data.totalPages);
           setalbumdata(album.data.Albmus);
           setload1(false);
           seterror1(false);
+          console.log('query.get("page"):', query.get("genre"))
+          // if(genres=="" && year!=="-1"){
+          //   history.push(
+          //     `/home`)
+          //     // ?page=${page}&size=${limit}&year=${year}
+          //     }
+          //     if(year=="-1"){
+          //       history.push(
+          //         `/home?year=${year}`)
+          //         }
+          // if (query.get("genre") != "") {
+          //     history.push(
+          //       `/home?page=${+query.get("page")}&size=${+query.get(
+          //         "size"
+          //         )}&genre=${query.get("genre")}&year=${year}`
+          //         );
+          //       }
+          let url=(page>1?`page=${+query.get("page")}&size=${limit}`:"")
+          +(genres!==""? `&genre=${query.get("genre")}`:"")
+          +(year=="-1" ? `&year=${year}`:"")
+          history.push(`/home?${url}`);
         }
       } catch (error) {
         console.log("error:", error);
@@ -69,10 +107,10 @@ export default function Album() {
       try {
         let album = await axios.get(
           // `https://shielded-sands-21994.herokuapp.com/music/allAllbum?page=${page}&limit=${limit}&year=${
-          `http://localhost:2345/music/allAllbumSelf/data?page=${
-            page.page
-          }&limit=${limit}&year=${
-            year ? "-1" : "1"
+          `http://localhost:2345/music/allAllbumSelf/data?page=${+query.get(
+            "page"
+          )}&limit=${+query.get("size")}&year=${
+            year 
           }&name=${string}&genre=${genres}&self=${personal}`,
           {
             headers: {
@@ -81,12 +119,31 @@ export default function Album() {
           }
         );
         if (album !== undefined) {
-          // console.log('album:', album)
-          console.log('album.data.totalPages:self', album.data.totalPages)
+          // if (album.data.totalPages == undefined) {
+          //   setPage(page - 1);
+          //   query.set("page", page.toString());
+          //   history.push(`/home?page=${page - 1}&size=5`);
+          // }
           setTotalpage(album.data.totalPages);
           setalbumdata(album.data.Albmus);
           setload1(false);
           seterror1(false);
+          // if(genres==""){
+          //   history.push(
+          //     `/home?page=${page}&size=${limit}&year=${year}&self=${personal}`)
+          //     }
+          // if (query.get("genre") != "") {
+          //     history.push(
+          //       `/home?page=${+query.get("page")}&size=${+query.get(
+          //         "size"
+          //         )}&genre=${query.get("genre")}&year=${year}&self=${personal}`
+          //         );
+          //       }
+          let url=(page>1?`page=${+query.get("page")}&size=${limit}`:"")
+          +(genres!==""? `genre=${query.get("genre")}`:"")
+          +(year=="-1" ? `&year=${year}`:"")
+          +(personal=="-1"?`&self=${personal}`:"" )
+          history.push(`/home?${url}`);
         }
       } catch (error) {
         console.log("error:", error);
@@ -94,11 +151,14 @@ export default function Album() {
         setload1(false);
       }
     }
-    if (personal) {
+    if (personal==-1) {
+      query.set("self","-1")
       getSelf();
     } else {
+      query.set("self","1")
       getalbum();
     }
+    query.set("genre", genres.toString());
   }, [page, year, forceUpade2, genre, string, genres, personal]);
   return (
     <>
@@ -142,10 +202,17 @@ export default function Album() {
             <>
               <Button
                 onClick={() => {
-                  setyear(!year);
+                  if(year=="1"){
+
+                    setyear("-1");
+                    query.set("year","-1")
+                  }else{
+                    setyear("1");
+                    query.set("year","1")
+                  }
                 }}
                 style={{ margin: "1% 0%" }}
-                variant={!year ? "outlined" : "contained"}
+                variant={year=="1" ? "outlined" : "contained"}
               >
                 Sort year
               </Button>
@@ -154,11 +221,19 @@ export default function Album() {
                 <Button
                   onClick={() => {
                     setpersonal(!personal);
+                    if(personal=="1"){
+                      setpersonal("-1");
+                    
+                    }else{
+                      setpersonal("1");
+                     
+                    }
                   }}
+                  
                   style={{ margin: "1% 0%" }}
-                  variant={!personal ? "outlined" : "contained"}
+                  variant={personal=="1" ? "outlined" : "contained"}
                 >
-                  Your Album
+                  Your Albums
                 </Button>
               ) : (
                 ""
@@ -193,7 +268,7 @@ export default function Album() {
             <Stack spacing={3}>
               <Pagination
                 count={totalPage}
-                defaultPage={Number(page.page) || 1}
+                defaultPage={+query.get("page") ? +query.get("page") : 1}
                 onChange={setCurrentPage}
                 color="primary"
                 size="large"

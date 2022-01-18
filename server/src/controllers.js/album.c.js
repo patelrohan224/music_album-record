@@ -15,8 +15,11 @@ router.post('/addAlbum', authenticate, async function (req, res) {
         artistname: req.body.artistname,
         albumimg: req.body.albumimg
     })
+    const totalPages = Math.ceil(
+        (await albumShema.find().countDocuments().lean().exec()) / 5
+    );
     return res.status(200).send({
-        Album
+        Album,totalPages
     })
 })
 router.get("/getId", authenticate, async function (req, res) {
@@ -49,7 +52,12 @@ router.delete("/delete/:id", authenticate, async function (req, res) {
 })
 router.patch('/editAlbum/:id', authenticate, async function (req, res) {
     let Album = await albumShema.findByIdAndUpdate(req.params.id, {
-        name: req.body.name
+        name: req.body.name,
+        year: req.body.year,
+        genre: req.body.genre,
+        artistimg: req.body.artistimg,
+        artistname: req.body.artistname,
+        albumimg: req.body.albumimg
     })
     return res.status(200).send({
         Album
@@ -73,7 +81,7 @@ router.get("/allAllbumSelf/data",authenticate, async function (req, res) {
             [
                 ['year', year],
             ]).lean().exec();
-            console.log(Albmus);
+            // console.log(Albmus);
         Albmus = Albmus.filter((x) =>
             x.name.toLowerCase().includes(name.toLowerCase()) &&
             x.genre.toLowerCase().includes(genr.toLowerCase())
@@ -115,6 +123,7 @@ router.get("/allAllbum", async function (req, res) {
     const offset = (page - 1) * size;
     const name = req.query.name
     let data
+    // console.log(genr,year);
     if (name != "" || genr != "" ) {
         let Albmus = await albumShema.find().sort(
             [
@@ -152,6 +161,52 @@ router.get("/allAllbum", async function (req, res) {
             totalPages
         })
     }
+})
+
+router.patch("/songedit/:idA/ii/:i", async function (req, res) {   
+   
+    let al=await albumShema.findById(req.params.idA)
+
+    let ar=al.songs
+ 
+    let filteredAry = ar.filter(e => e !==ar[req.params.i])
+    // console.log('filteredAry:', filteredAry)
+    
+    let Album = await albumShema.findByIdAndUpdate(req.params.idA, {
+        songs:filteredAry
+    })
+    // console.log(Album);
+    return res.status(200).send({
+        "ss":"s"})
+})
+
+router.patch("/songedit/:idA/ii/:i/d/:du/s/:sname", async function (req, res) {   
+   
+    let al=await albumShema.findById(req.params.idA)
+
+    let ar=al.songs
+    ar[req.params.i]=[req.params.sname,req.params.du]
+    console.log(ar);
+    let Album = await albumShema.findByIdAndUpdate(req.params.idA, {
+        songs:ar
+    })
+    // console.log(Album);
+    return res.status(200).send({
+        "ss":"s"})
+})
+
+router.patch("/songadd/:idA/ii/:i/d/:adddur/s/:addname", async function (req, res) {   
+   
+    let al=await albumShema.findById(req.params.idA)
+
+    let ar=al.songs
+    ar.push([req.params.addname,req.params.adddur])
+    let Album = await albumShema.findByIdAndUpdate(req.params.idA, {
+        songs:ar
+    })
+    // console.log(Album);
+    return res.status(200).send({
+        "ss":"s"})
 })
 
 module.exports = router

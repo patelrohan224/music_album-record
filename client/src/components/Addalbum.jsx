@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import "./hoe.css";
 
-import {
-  TextField,
-  Button
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 
 import axios from "axios";
+import { useHistory, useLocation } from "react-router-dom";
 const initstate = {
   name: "",
   age: Number(""),
@@ -16,9 +14,13 @@ const initstate = {
   city: "",
   gender: "",
 };
-export default function Addalbum({setadalbum,adalbum}) {
+// const useQuery = () => {
+//   return new URLSearchParams(useLocation().search);
+// };
+export default function Addalbum({ setadalbum, adalbum }) {
+  // const query = useQuery();
+  // const [page, setPage] = useState(+query.get("page"));
   const [load, setLaod] = useState(false);
-
   const { token } = useSelector((state) => state.Auth);
   const [name, setName] = useState("");
   const [Name_flag, setName_flag] = useState(false);
@@ -80,14 +82,12 @@ export default function Addalbum({setadalbum,adalbum}) {
     }
     return true;
   };
-
+  let history = useHistory();
   async function addstudent() {
-    console.log(name, age, gender, city, education, contact);
     setLaod(true);
     try {
-      console.log("sdada", ar);
       // await axios.post("https://shielded-sands-21994.herokuapp.com/music/addAlbum",{
-      await axios.post(
+      let album = await axios.post(
         "http://localhost:2345/music/addAlbum",
         {
           name: `${name}`,
@@ -105,7 +105,8 @@ export default function Addalbum({setadalbum,adalbum}) {
         }
       );
       setLaod(false);
-
+      setadalbum(!adalbum);
+      history.push(`/rd`);
     } catch (error) {
       console.log("add stdt", error);
       setLaod(true);
@@ -160,7 +161,6 @@ export default function Addalbum({setadalbum,adalbum}) {
             size="small"
           />
         </div>
-        
 
         <div className="addst-dv">
           <TextField
@@ -271,7 +271,6 @@ export default function Addalbum({setadalbum,adalbum}) {
               validation();
               if (validation()) {
                 addstudent();
-                console.log("-------");
               }
             }}
           >

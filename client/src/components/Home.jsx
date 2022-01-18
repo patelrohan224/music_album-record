@@ -23,8 +23,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log("is login");
-  },[])  
+
+  },[adalbum])  
 
   return (
     <>
@@ -81,12 +81,12 @@ export default function Home() {
             {" "}
             <Button
               onClick={() => {
-                if (!isLogin) {
+                if (isLogin) {
                   setadalbum(!adalbum);
                 }
               }}
               style={{ float: "right", margin: "0% 1%" }}
-              variant={!isLogin ? "contained" : "outlined"}
+              variant={adalbum ? "contained" : "outlined"}
             >
               Add Album
             </Button>
@@ -95,7 +95,9 @@ export default function Home() {
           ""
         )} 
       </div>
-      {adalbum?<Addalbum setadalbum={setadalbum} adalbum={adalbum} />:""}
+      {adalbum?
+      <Addalbum setadalbum={setadalbum} adalbum={adalbum} />
+      :""}
     </>
   );
 }
