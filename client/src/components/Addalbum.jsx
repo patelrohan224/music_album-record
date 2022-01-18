@@ -86,10 +86,10 @@ export default function Addalbum({ setadalbum, adalbum }) {
   async function addstudent() {
     setLaod(true);
     try {
-      // await axios.post("https://shielded-sands-21994.herokuapp.com/music/addAlbum",{
-      let album = await axios.post(
-        "http://localhost:2345/music/addAlbum",
-        {
+      await axios.post("https://shielded-sands-21994.herokuapp.com/music/addAlbum",{
+      // let album = await axios.post(
+      //   "http://localhost:2345/music/addAlbum",
+      //   {
           name: `${name}`,
           artistname: `${age}`,
           songs: ar,

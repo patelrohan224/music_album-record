@@ -18,8 +18,8 @@ export default function AlbumE({ e, setforceUpade2, togleLogin, forceUpade2 }) {
     async function verify() {
       try {
         
-        let album = await axios.get(`http://localhost:2345/music/getId`, {
-          // let album = await axios.get(`https://shielded-sands-21994.herokuapp.com/music/getId`, {
+        // let album = await axios.get(`http://localhost:2345/music/getId`, {
+          let album = await axios.get(`https://shielded-sands-21994.herokuapp.com/music/getId`, {
           headers: {
             Authorization: "Bearer " + token,
           },

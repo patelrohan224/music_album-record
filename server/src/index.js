@@ -6,8 +6,8 @@ app.use(passport.initialize());
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 app.use(cookieParser());
-// app.use(cors({origin:'https://music-album-records-rohanpatel.vercel.app'}))
-app.use(cors({origin:'http://localhost:3000'}))
+app.use(cors({origin:'https://music-album-records-rohanpatel.vercel.app'}))
+// app.use(cors({origin:'http://localhost:3000'}))
 
 passport.serializeUser(function ({
     user,
@@ -48,8 +48,8 @@ app.get('/auth/google/callback',
             token
         } = req.user
         let name = "rohanEmail" + user.email
-        // return res.redirect('https://music-album-records-rohanpatel.vercel.app/' + "?" + token + name);
-        return res.redirect('http://localhost:3000/rd' + "?" + token + name);
+        return res.redirect('https://music-album-records-rohanpatel.vercel.app/rd' + "?" + token + name);
+        // return res.redirect('http://localhost:3000/rd' + "?" + token + name);
   
         token = ""
         name = ""

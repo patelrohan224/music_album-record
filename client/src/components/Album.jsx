@@ -52,14 +52,20 @@ export default function Album() {
       setload1(true);
       try {
         let album = await axios.get(
-          // `https://shielded-sands-21994.herokuapp.com/music/allAllbum?page=${page}&limit=${limit}&year=${
-          `http://localhost:2345/music/allAllbum?page=${+query.get(
+          `https://shielded-sands-21994.herokuapp.com/music/allAllbum?page=${+query.get(
             "page"
-          )}&limit=${+query.get("size")}&year=${
-            year 
-          }&name=${string}&genre=${
-            genres
-          }`
+            )}&limit=${+query.get("size")}&year=${
+              year 
+            }&name=${string}&genre=${
+              genres
+            }`
+          // `http://localhost:2345/music/allAllbum?page=${+query.get(
+          //   "page"
+          // )}&limit=${+query.get("size")}&year=${
+          //   year 
+          // }&name=${string}&genre=${
+          //   genres
+          // }`
         );
 
         if (album !== undefined) {
@@ -106,17 +112,26 @@ export default function Album() {
       setload1(true);
       try {
         let album = await axios.get(
-          // `https://shielded-sands-21994.herokuapp.com/music/allAllbum?page=${page}&limit=${limit}&year=${
-          `http://localhost:2345/music/allAllbumSelf/data?page=${+query.get(
+          `https://shielded-sands-21994.herokuapp.com/music/allAllbumSelf/data?page=${+query.get(
             "page"
-          )}&limit=${+query.get("size")}&year=${
-            year 
-          }&name=${string}&genre=${genres}&self=${personal}`,
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
+            )}&limit=${+query.get("size")}&year=${
+              year 
+            }&name=${string}&genre=${genres}&self=${personal}`,
+            {
+              headers: {
+                Authorization: "Bearer " + token,
+              },
+            }
+          // `http://localhost:2345/music/allAllbumSelf/data?page=${+query.get(
+          //   "page"
+          // )}&limit=${+query.get("size")}&year=${
+          //   year 
+          // }&name=${string}&genre=${genres}&self=${personal}`,
+          // {
+          //   headers: {
+          //     Authorization: "Bearer " + token,
+          //   },
+          // }
         );
         if (album !== undefined) {
           // if (album.data.totalPages == undefined) {
@@ -163,7 +178,7 @@ export default function Album() {
   return (
     <>
       <div className="contest">
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex",padding:"0% 2% 2%" }}>
           <TextField
             style={{ margin: "1% 0%" }}
             // error={aimg}
@@ -278,6 +293,10 @@ export default function Album() {
         ) : (
           ""
         )}
+        {albumdata==undefined?
+        <Button onClick={() =>{
+        history.push("/home")
+        setPage(1)}}>Home</Button>:''}
       </div>
     </>
   );

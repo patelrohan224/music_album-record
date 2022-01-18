@@ -12,14 +12,14 @@ export default function Home() {
   const [adalbum,setadalbum]=useState(false);
   const { isLogin,Name } = useSelector((state) => state.Auth);
   const google_auth = () => {
-    // window.location.href = "https://shielded-sands-21994.herokuapp.com/auth/google";
-    window.location.href = "http://localhost:2345/auth/google";
+    window.location.href = "https://shielded-sands-21994.herokuapp.com/auth/google";
+    // window.location.href = "http://localhost:2345/auth/google";
   };
 
   const logout = () => {
     dispatch(LogOut());
-    // window.location.href = "https://music-album-records-rohanpatel.vercel.app/";
-    window.location.href = " http://localhost:3000/";
+    window.location.href = "https://music-album-records-rohanpatel.vercel.app/";
+    // window.location.href = " http://localhost:3000/";
   };
 
   useEffect(() => {

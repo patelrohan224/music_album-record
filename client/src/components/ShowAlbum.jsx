@@ -12,6 +12,7 @@ export default function ShowAlbum() {
   const [load, setLoad] = useState(false);
   const [editflag, seteditflag] = useState(false);
   const [e, sete] = useState([]);
+  const [da, setdata] = useState([]);
   const idA = useParams();
   const { isLogin } = useSelector((state) => state.Auth);
   let history = useHistory();
@@ -21,19 +22,19 @@ export default function ShowAlbum() {
   const [arimg, setarimg] = useState("");
   const [year, setyear] = useState("");
   const [arname, setarname] = useState("");
-  const [forceUpadte,setForceUpadte] = useState(0)
-  const [sedit,setsedit]= useState(false)
-  const [sname,setsname]= useState("")
-  const [du,setdur]= useState("")
+  const [forceUpadte, setForceUpadte] = useState(0);
+  const [sedit, setsedit] = useState(false);
+  const [sname, setsname] = useState("");
+  const [du, setdur] = useState("");
 
-  const [addname,setaddname]= useState("")
-  const [adddur,setadddur]= useState("")
+  const [addname, setaddname] = useState("");
+  const [adddur, setadddur] = useState("");
 
   async function deleteA(idd) {
     setLoad(true);
     try {
       let album = await axios.delete(
-        `http://localhost:2345/music/delete/${e._id}`,
+        `https://shielded-sands-21994.herokuapp.com/music/delete/${e._id}`,
         // `https://shielded-sands-21994.herokuapp.com/music/delete/${e._id}`,
         {
           headers: {
@@ -54,7 +55,7 @@ export default function ShowAlbum() {
     setLoad(true);
     try {
       let album = await axios.patch(
-        `http://localhost:2345/music/editAlbum/${idd}`,
+        `https://shielded-sands-21994.herokuapp.com/music/editAlbum/${idd}`,
         // `https://shielded-sands-21994.herokuapp.com/music/editAlbum/${idd}`,
 
         {
@@ -86,31 +87,31 @@ export default function ShowAlbum() {
     setLoad(true);
     try {
       let album = await axios.patch(
-        `http://localhost:2345/music/songedit/${idA.idA}/ii/${ii}`
+        `https://shielded-sands-21994.herokuapp.com/music/songedit/${idA.idA}/ii/${ii}`
       );
       seterror(false);
       setLoad(false);
       // console.log("sond delete", album);
-      setForceUpadte(forceUpadte+1)
+      setForceUpadte(forceUpadte + 1);
     } catch (error) {
       setLoad(false);
       seterror(true);
       console.log("error:", error);
     }
   }
-  
+
   async function songAdd(ii) {
     setLoad(true);
     try {
       let album = await axios.patch(
-        `http://localhost:2345/music/songadd/${idA.idA}/ii/${ii}/d/${adddur}/s/${addname}`
+        `https://shielded-sands-21994.herokuapp.com/music/songadd/${idA.idA}/ii/${ii}/d/${adddur}/s/${addname}`
       );
       seterror(false);
       setLoad(false);
-      setaddname("")
-      setadddur("")
+      setaddname("");
+      setadddur("");
       // console.log("sond delete", album);
-      setForceUpadte(forceUpadte+1)
+      setForceUpadte(forceUpadte + 1);
     } catch (error) {
       setLoad(false);
       seterror(true);
@@ -121,15 +122,15 @@ export default function ShowAlbum() {
     setLoad(true);
     try {
       let album = await axios.patch(
-        `http://localhost:2345/music/songedit/${idA.idA}/ii/${ii}/d/${du}/s/${sname}`
+        `https://shielded-sands-21994.herokuapp.com/music/songedit/${idA.idA}/ii/${ii}/d/${du}/s/${sname}`
       );
       seterror(false);
       setLoad(false);
-      setsname("")
-      setdur("")
-      setsedit(!sedit)
+      setsname("");
+      setdur("");
+      setsedit(!sedit);
       // console.log("sond delete", album);
-      setForceUpadte(forceUpadte+1)
+      setForceUpadte(forceUpadte + 1);
     } catch (error) {
       setLoad(false);
       seterror(true);
@@ -140,7 +141,7 @@ export default function ShowAlbum() {
     async function verify() {
       setLoad(true);
       try {
-        let album = await axios.get(`http://localhost:2345/music/getId`, {
+        let album = await axios.get(`https://shielded-sands-21994.herokuapp.com/music/getId`, {
           // let album = await axios.get(`https://shielded-sands-21994.herokuapp.com/music/getId`, {
           headers: {
             Authorization: "Bearer " + token,
@@ -167,7 +168,7 @@ export default function ShowAlbum() {
 
       try {
         let album = await axios.get(
-          `http://localhost:2345/music/getalbum/${idA.idA}`,
+          `https://shielded-sands-21994.herokuapp.com/music/getalbum/${idA.idA}`,
           {
             // let album = await axios.get(`https://shielded-sands-21994.herokuapp.com/music/getId`, {
             headers: {
@@ -176,7 +177,7 @@ export default function ShowAlbum() {
           }
         );
         seterror(false);
-
+        setdata(album.data.album)
         sete(album.data.album);
         setLoad(false);
       } catch (error) {
@@ -187,7 +188,7 @@ export default function ShowAlbum() {
     }
 
     getdata();
-  }, [show, editflag,forceUpadte]);
+  }, [show, editflag, forceUpadte]);
   return load ? (
     <>
       <p>Loading...</p>
@@ -364,79 +365,104 @@ export default function ShowAlbum() {
                 {/* <p>Song Name</p>
                 <p>Duration</p> */}
               </div>
-              {e.songs?.map((e?, i) => (
+              {e.songs?.map((e, i) => (
                 <>
                   <div key={i} className="songss">
-                   {sedit? <TextField
-                    label={e[0]}
-                    value={sname}
-                    onChange={(e) => {
-                      setsname(e.target.value);
-                    }}
-                    id="outlined-basic"
-                    variant="outlined"
-                    className="name_inpt"
-                    size="small"
-                  />: <p>
-                      {i + 1} {e[0]}
-                    </p>}
-                    {sedit? <TextField
-                    label={e[1]}
-                    value={du}
-                    onChange={(e) => {
-                      setdur(e.target.value);
-                    }}
-                    type="number"
-                    id="outlined-basic"
-                    variant="outlined"
-                    className="name_inpt"
-                    size="small"
-                  />:  <p style={{ float: "right" }}>
-                      {e[1]}
-                    </p>
-                    }
-                   {sedit?    <Button disabled={du=="" || sname==""} onClick={() =>
-                    {
-                      
-                      editsong(i)
-                    }
-                       }>Yes</Button>:""}
-                    <Button 
-                      onClick={() =>setsedit(!sedit)} >Edit</Button>
-                      <Button onClick={() => sondelete(i)}>Delete</Button>
+                    {sedit ? (
+                      <TextField
+                        label={e[0]}
+                        value={sname}
+                        onChange={(e) => {
+                          setsname(e.target.value);
+                        }}
+                        id="outlined-basic"
+                        variant="outlined"
+                        className="name_inpt"
+                        size="small"
+                      />
+                    ) : (
+                      <p>
+                        {i + 1} {e[0]}
+                      </p>
+                    )}
+                    {sedit ? (
+                      <TextField
+                        label={e[1]}
+                        value={du}
+                        onChange={(e) => {
+                          setdur(e.target.value);
+                        }}
+                        type="number"
+                        id="outlined-basic"
+                        variant="outlined"
+                        className="name_inpt"
+                        size="small"
+                      />
+                    ) : (
+                      <p style={{ float: "right" }}>{e[1]}</p>
+                    )}
+                    {sedit && isLogin ? (
+                      <Button
+                        disabled={du == "" || sname == ""}
+                        onClick={() => {
+                          editsong(i);
+                        }}
+                      >
+                        Yes
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                    <>
+                    {id === da.artist ? (
+                      <div>
+                        <Button onClick={() => setsedit(!sedit)}>Edit</Button>
+                        <Button onClick={() => sondelete(i)}>Delete</Button>
+                        </div>
+                    ) : (
+                      ""
+                      )}
+                      </>
                   </div>
                 </>
               ))}
             </>
           }
-             <div className="songss">
-          <TextField
-                    label={"Song Name"}
-                    value={addname}
-                    onChange={(e) => {
-                      setaddname(e.target.value);
-                    }}
-                   
-                    id="outlined-basic"
-                    variant="outlined"
-                    className="name_inpt"
-                    size="small"
-                  />
-                  <TextField
-                    label={"song Duration"}
-                    value={adddur}
-                    onChange={(e) => {
-                      setadddur(e.target.value);
-                    }}
-                    type="number"
-                    id="outlined-basic"
-                    variant="outlined"
-                    className="name_inpt"
-                    size="small"
-                  />
-                   <Button  disabled={adddur=="" || addname==""}
-                      onClick={() =>songAdd()} >Add</Button>
-                  </div>
+          {id === e.artist ? (
+            <div className="songss">
+              <TextField
+                label={"Song Name"}
+                value={addname}
+                onChange={(e) => {
+                  setaddname(e.target.value);
+                }}
+                id="outlined-basic"
+                variant="outlined"
+                className="name_inpt"
+                size="small"
+              />
+              <TextField
+                label={"song Duration"}
+                value={adddur}
+                onChange={(e) => {
+                  setadddur(e.target.value);
+                }}
+                type="number"
+                id="outlined-basic"
+                variant="outlined"
+                className="name_inpt"
+                size="small"
+              />
+              <Button
+                disabled={adddur == "" || addname == ""}
+                onClick={() => songAdd()}
+              >
+                Add
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>
