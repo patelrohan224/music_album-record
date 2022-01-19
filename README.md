@@ -16,7 +16,7 @@ npm install
 </br>
 npm start
 </br>
-dependencies
+dependencies client
 
 
 
@@ -42,3 +42,21 @@ dependencies
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "web-vitals": "^2.1.3"
+    
+   
+   </br>
+dependencies server
+    
+    
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^11.0.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.6",
+    "nodemon": "^2.0.15",
+    "passport": "^0.5.2",
+    "passport-google-oauth2": "^0.2.0",
+    "uuid": "^8.3.2"
