@@ -1,4 +1,4 @@
-# Music-Album-Records-2
+# Music-Album-Records
  Music-Album-Records app where artist can add albums with artist and songs, search and filter and sort data. authentication, authorization, jsonWebToken, bcryptjs. 
 
 Links
